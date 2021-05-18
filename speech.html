@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>The button Element</h1>
+
+<button id="start-btn">start</button>
+<script src="index.js"></script>
+</body>
+</html>
+
+
+<script>
+const startBtn = document.getElementById("start-btn");
+
+const recognition = new webkitSpeechRecognition();
+recognition.continous = true;
+recognition.lang = "en-us";
+recognition.interimResults = true;
+//recognition.maxAlternatives = 1;
+const synth = window.speechSynthesis;
+const utter = new SpeechSynthesisUtterance();
+startBtn.addEventListener("click", () => {
+    recognition.start();
+});
+
+// utter.onend = (e) => {
+//     recognition.start();
+// }
+recognition.onresult = (e) => {
+    let transcript = "";
+    for(var i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                transcript += event.results[i][0].transcript;
+            }
+            // } else {
+            //     textAreaInterim.value += event.results[i][0].transcript;
+            // }
+        }
+    console.log(transcript);
+    //const transcript = e.results[e.results.length - 1][0].transcript.trim();
+    // if(transcript === "hello friend"){
+    //     recognition.stop();
+    //     utter.text = "What to find?"
+    //     synth.speak(utter);
+    //     console.log("How are you");
+    // }
+    // if(transcript === "good bye"){
+    //     recognition.stop();
+    //     utter.text = "Hope to see you soon";
+    //     synth.speak(utter);
+    // }
+};
+</script>

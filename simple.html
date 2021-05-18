@@ -1,0 +1,48 @@
+<html>
+    <body>
+        <script>
+            const recognition = new webkitSpeechRecognition();
+            //const synth = window.speechSynthesis;
+            //const utter = new SpeechSynthesisUtterance();
+            recognition.continous = true;
+            recognition.interimResults = true;
+            function onButtonClick(){
+                recognition.start();
+            }   
+            var transcript = "";
+            recognition.onend = function(event) {
+                console.log('recognitionEnd', JSON.stringify(event));
+            };
+            recognition.onerror = function(event) {
+                console.log('recognitionError', JSON.stringify(event));
+            };
+            recognition.onresult = function(event){
+                // let interim = "";
+                const textAreaInterim = document.getElementById("outputInterim");
+                const textAreaFinal = document.getElementById("outputFinal");
+                    for(var i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            //transcript += event.results[i][0].transcript;
+                        // if(transcript == "hello friend"){
+                        //     transcript = "";
+                        //     utter.text = "What to find?";
+                        //     synth.speak(utter);
+        
+                        // }
+                            textAreaFinal.value += event.results[i][0].transcript;
+                    } else {
+                        //interim += event.results[i][0].transcript;
+                        textAreaInterim.value += event.results[i][0].transcript;
+                    }
+                }
+            }
+        </script>
+    <h1>The button Element</h1>
+
+    <button id="start-btn" onclick="onButtonClick()">start</button>
+    <textarea id="outputInterim"></textarea>
+    <textarea id="outputFinal"></textarea>
+</body>
+
+</html>
+

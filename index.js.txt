@@ -1,0 +1,13 @@
+const startBtn = document.getElementById("start-btn");
+
+const recognition = new webkitSpeechRecognition();
+recognition.continous = false;
+recognition.lang = "en-us";
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+startBtn.addEventListener("click", () => {
+    recognition.start();
+});
+
+

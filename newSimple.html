@@ -1,0 +1,74 @@
+<html>
+
+<body>
+    <script>
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        recognition.lang = "en-UK";
+
+        // recognition.onstart = function () {
+        //     recognizing = true;
+        //     showInfo('info_speak_now');
+        //     start_img.src = '/intl/en/chrome/assets/common/images/content/mic-animate.gif';
+        // };
+
+        const synth = window.speechSynthesis;
+        const utter = new SpeechSynthesisUtterance();
+        var globalTranscriptVal = "";
+        var finderToken = "hello monica";
+        var modeListening = false;
+        synth.onend = function (event) {
+            if(transcriptVal == finderToken){
+                transcriptVal = "";
+            }
+        }
+        recognition.onresult = function (event) {
+            if (typeof (event.results) == 'undefined') {
+                recognition.onend = null;
+                recognition.stop();
+                return;
+            }
+            let transcriptVal = "";
+            let initializerVal = "";
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    transcriptVal += event.results[i][0].transcript.trim();
+                    //transcriptVal.toLowerCase() === "hello tintin"
+                    transcriptVal =  transcriptVal.replace(/  +/g, ' ');;
+                        if(transcriptVal.toLowerCase() == "hello monica" || transcriptVal.toLowerCase() == "hello monika"){
+                            transcriptVal = "";
+                            utter.text = "What to find?";
+                            synth.speak(utter);
+                            modeListening = true;
+                        }
+                        else if(transcriptVal.toLowerCase() == "ok done"){
+                            utter.text = "ok bye, have a good day";
+                            synth.speak(utter);
+                            recognition.stop();
+                        }
+                        else if(modeListening){
+                            //transcriptVal += event.results[i][0].transcript;
+                            modeListening = false;
+                            document.getElementById('final').value = transcriptVal;
+                        }
+                    //document.getElementById('final').value += event.results[i][0].transcript;
+
+                }
+                //  else {
+                //     document.getElementById('interim').value += event.results[i][0].transcript;
+                // }
+            }
+
+        };
+
+        function onHelloClick() {
+            recognition.start();
+        }
+    </script>
+    <button id="btn" type="button" onclick="onHelloClick()">Hello</button>
+    <label for="interim">Interim</label><textarea id="interim" style="width: 50%; height: 20%;"></textarea>
+    <label for="final">Final</label><textarea id="final" style="width: 50%; height: 20%;"></textarea>
+</body>
+
+</html>
